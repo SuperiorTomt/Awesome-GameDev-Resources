@@ -1,4 +1,4 @@
-add_executable(ai-maze maze.cpp)
+add_executable(ai-maze maze.cpp  "stack.h")
 
 file(GLOB TEST_INPUT_FILES ${CMAKE_CURRENT_SOURCE_DIR}/tests/*.in)
 file(GLOB TEST_OUTPUT_FILES ${CMAKE_CURRENT_SOURCE_DIR}/tests/*.out)
