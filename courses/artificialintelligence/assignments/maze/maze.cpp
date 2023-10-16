@@ -135,7 +135,7 @@ void printBoard(Point2D board[], int C, int L) {
     std::cout << " _";
   }
 
-  std::cout << std::endl;
+  std::cout << "  " << std::endl;
 
   for (int i = 0; i < L; i++) {
     std::cout << "|";
@@ -150,6 +150,6 @@ void printBoard(Point2D board[], int C, int L) {
       else
         std::cout << " ";
     }
-    std::cout << std::endl;
+    std::cout << " " << std::endl;
   }
 }
