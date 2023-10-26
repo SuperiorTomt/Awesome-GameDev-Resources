@@ -4,7 +4,95 @@
 #include <cstdint>
 
 // Using stack.h from CSI-281, Data Structures & Algorithms with minor changes
-#include "stack.h"
+  template <typename T> class Stack {
+  private:
+    template <typename R> struct Node {
+      R mData;
+      Node<R> *mNext;
+
+      /* Pre: None
+     * Post: This object is initialized using default values
+     * Purpose: To initialize node object
+     *************************************************************************/
+      Node() {
+        mData = R();
+        mNext = NULL;
+      }
+
+      /* Pre: None
+     * Post: This object is initialized using specified data
+     * Purpose: To initialize node object
+     *************************************************************************/
+      Node(R data) {
+        mData = data;
+        mNext = NULL;
+      }
+    };
+    Node<T> *mTop, *mBottom;
+    int mCount;
+
+  public:
+    Stack();
+    ~Stack();
+    void clear();
+    bool isEmpty();
+    T pop();
+    T top();
+    void push(T data);
+  };
+
+  template <typename T> Stack<T>::Stack() {
+    mTop = NULL;
+    mBottom = NULL;
+    mCount = 0;
+  }
+
+  template <typename T> Stack<T>::~Stack() { clear(); }
+
+  template <typename T> void Stack<T>::clear() {
+    Node<T> *tmp;
+    while (mTop != NULL) {
+      tmp = mTop;
+      mTop = mTop->mNext;
+      tmp->mNext = NULL;
+      delete tmp;
+    }
+    mBottom = NULL;
+    mCount = 0;
+  }
+
+  template <typename T> bool Stack<T>::isEmpty() { return mCount == 0; }
+
+  template <typename T> T Stack<T>::top() { return mTop->mData; }
+
+  template <typename T> T Stack<T>::pop() {
+    T data = T();
+    Node<T> *tmp;
+    if (mTop != NULL) {
+      tmp = mTop;
+      mTop = mTop->mNext;
+      tmp->mNext = NULL;
+      data = tmp->mData;
+      delete tmp;
+      if (mTop == NULL) mBottom = NULL;
+      mCount--;
+    }
+    return data;
+  }
+
+  template <typename T> void Stack<T>::push(T data) {
+    Node<T> *newNode;
+    newNode = new Node<T>(data);
+    if (newNode != NULL) {
+      if (mTop == NULL) {
+        mBottom = newNode;
+      } else {
+        newNode->mNext = mTop;
+      }
+      mTop = newNode;
+      mCount++;
+    }
+  }
 
 int randIndex = 0;
 int randVec[] = {72, 99, 56, 34, 43, 62, 31, 4,  70, 22, 6,  65, 96, 71, 29, 9,  98, 41, 90, 7,
@@ -21,14 +109,13 @@ int getRand() {
 }
 
 struct Point2D {
-public:
   bool wallS = true, wallE = true, visited = false;
 
   int xPos = 0, yPos = 0;
 };
 
 void generateMaze(Point2D board[], int C, int L);
-vector<Point2D> getVisitableNeighbors(Point2D board[], int C, int L, int xPos, int yPos);
+std::vector<Point2D> getVisitableNeighbors(Point2D board[], int C, int L, int xPos, int yPos);
 void breakWall(Point2D board[], int C, Point2D p1, Point2D p2);
 void printBoard(Point2D board[], int C, int L);
 
@@ -74,7 +161,7 @@ void generateMaze(Point2D board[], int C, int L) {
     Point2D temp = stk.top();
     board[temp.yPos * C + temp.xPos].visited = true;
 
-    vector<Point2D> visitables = getVisitableNeighbors(board, C, L, temp.xPos, temp.yPos);
+    std::vector<Point2D> visitables = getVisitableNeighbors(board, C, L, temp.xPos, temp.yPos);
 
     if (visitables.empty())
       stk.pop();  // backtrack
@@ -91,8 +178,8 @@ void generateMaze(Point2D board[], int C, int L) {
   }
 }
 
-vector<Point2D> getVisitableNeighbors(Point2D board[], int C, int L, int xPos, int yPos) {
-  vector<Point2D> neighbors;
+std::vector<Point2D> getVisitableNeighbors(Point2D board[], int C, int L, int xPos, int yPos) {
+  std::vector<Point2D> neighbors;
 
   int nbrX, nbrY;
 
